@@ -31,6 +31,27 @@ app.post("/sign-up", (req, res) => {
     .send("Esse username já existe, escolha outro, por favor.");
 });
 
+app.post("/tweets", (req, res) => {
+  const { username, tweet } = req.body;
+
+  if (!username || !tweet) {
+    return res.status(400).send("Todos os campos são obrigatórios!");
+  }
+
+  const thisUserExists = usuarios.find(
+    (usuario) => usuario.username === username
+  );
+
+  if (thisUserExists) {
+    const { avatar } = thisUserExists;
+    tweets.push({ username, avatar, tweet });
+
+    return res.status(201).send("OK");
+  }
+
+  res.status(404).send("Usuário não encontrado.");
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on: http://localhost:${PORT}/`);
 });
