@@ -30,18 +30,17 @@ app.post("/sign-up", (req, res) => {
 });
 
 app.post("/tweets", (req, res) => {
-  const { username, tweet } = req.body;
+  const { user } = req.headers;
+  const { tweet } = req.body;
 
-  if (!username || !tweet) {
+  if (!user || !tweet) {
     return res.status(400).send("Todos os campos são obrigatórios!");
   }
 
-  const thisUserExists = usuarios.find(
-    (usuario) => usuario.username === username
-  );
+  const thisUserExists = usuarios.find((usuario) => usuario.username === user);
 
   if (thisUserExists) {
-    const { avatar } = thisUserExists;
+    const { username, avatar } = thisUserExists;
     tweets.push({ username, avatar, tweet });
 
     return res.status(201).send("OK");
