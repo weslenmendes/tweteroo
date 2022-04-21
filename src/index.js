@@ -60,6 +60,22 @@ app.get("/tweets", (req, res) => {
   res.status(200).send(tweets);
 });
 
+app.get("/tweets/:username", (req, res) => {
+  const { username } = req.params;
+
+  const thisUserExists = usuarios.find(
+    (usuario) => usuario.username === username
+  );
+
+  if (!thisUserExists) {
+    return res.status(404).send("Usuário não encontrado.");
+  }
+
+  const allUserTweets = tweets.filter((tweet) => tweet.username === username);
+
+  res.status(200).send(allUserTweets);
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on: http://localhost:${PORT}/`);
 });
