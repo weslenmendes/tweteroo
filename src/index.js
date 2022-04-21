@@ -50,6 +50,16 @@ app.post("/tweets", (req, res) => {
   res.status(404).send("Usuário não encontrado.");
 });
 
+app.get("/tweets", (req, res) => {
+  if (tweets.length > 10) {
+    const lastTweets = tweets.slice(-10);
+
+    return res.status(200).send(lastTweets);
+  }
+
+  res.status(200).send(tweets);
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on: http://localhost:${PORT}/`);
 });
