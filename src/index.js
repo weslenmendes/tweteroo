@@ -51,13 +51,19 @@ app.post("/tweets", (req, res) => {
 });
 
 app.get("/tweets", (req, res) => {
-  if (tweets.length > 10) {
-    const lastTweets = tweets.slice(-10);
+  const page = parseInt(req.query.page);
 
-    return res.status(200).send(lastTweets);
-  }
+  if (page <= 0 || !page)
+    return res.status(400).send("Informe uma página válida!");
 
-  res.status(200).send(tweets);
+  const tweetsPerPage = 10;
+
+  const bottomLimit = page === 1 ? 0 : (page - 1) * tweetsPerPage + 1;
+  const upperLimit = page * tweetsPerPage;
+
+  const lastTweets = tweets.slice(bottomLimit, upperLimit);
+
+  res.status(200).send(lastTweets);
 });
 
 app.get("/tweets/:username", (req, res) => {
