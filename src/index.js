@@ -26,9 +26,7 @@ app.post("/sign-up", (req, res) => {
     return res.status(201).send("OK");
   }
 
-  return res
-    .status(422)
-    .send("Esse username já existe, escolha outro, por favor.");
+  res.status(422).send("Esse username já existe, escolha outro, por favor.");
 });
 
 app.post("/tweets", (req, res) => {
