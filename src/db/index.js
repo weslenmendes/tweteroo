@@ -1,4 +1,4 @@
-export const usuarios = [
+export let usuarios = [
   {
     username: "bobesponja",
     avatar:
@@ -6,7 +6,7 @@ export const usuarios = [
   },
 ];
 
-export const tweets = [
+export let tweets = [
   {
     username: "bobesponja",
     avatar:

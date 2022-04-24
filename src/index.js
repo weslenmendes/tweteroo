@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 
-import { usuarios, tweets } from "../db/index.js";
+import { usuarios, tweets } from "./db/index.js";
+import { isValidAvatar } from "./utils/index.js";
 
 const app = express();
 const PORT = 5000;
@@ -12,9 +13,11 @@ app.use(express.json());
 app.post("/sign-up", (req, res) => {
   const { username, avatar } = req.body;
 
-  if (!username || !avatar) {
+  if (!username || !avatar)
     return res.status(400).send("Todos os campos são obrigatórios!");
-  }
+
+  if (!isValidAvatar(avatar))
+    return res.status(400).send("Esse avatar não é válido.");
 
   const thisUserExists = usuarios.find(
     (usuario) => usuario.username === username
@@ -22,7 +25,6 @@ app.post("/sign-up", (req, res) => {
 
   if (!thisUserExists) {
     usuarios.push({ username, avatar });
-
     return res.status(201).send("OK");
   }
 
@@ -33,16 +35,14 @@ app.post("/tweets", (req, res) => {
   const { user } = req.headers;
   const { tweet } = req.body;
 
-  if (!user || !tweet) {
+  if (!user || !tweet)
     return res.status(400).send("Todos os campos são obrigatórios!");
-  }
 
   const thisUserExists = usuarios.find((usuario) => usuario.username === user);
 
   if (thisUserExists) {
     const { username, avatar } = thisUserExists;
     tweets.push({ username, avatar, tweet });
-
     return res.status(201).send("OK");
   }
 
@@ -72,9 +72,7 @@ app.get("/tweets/:username", (req, res) => {
     (usuario) => usuario.username === username
   );
 
-  if (!thisUserExists) {
-    return res.status(404).send("Usuário não encontrado.");
-  }
+  if (!thisUserExists) return res.status(404).send("Usuário não encontrado.");
 
   const allUserTweets = tweets.filter((tweet) => tweet.username === username);
 
