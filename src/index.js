@@ -57,10 +57,10 @@ app.get("/tweets", (req, res) => {
 
   const tweetsPerPage = 10;
 
-  const bottomLimit = page === 1 ? 0 : (page - 1) * tweetsPerPage + 1;
+  const bottomLimit = (page - 1) * tweetsPerPage;
   const upperLimit = page * tweetsPerPage;
 
-  const lastTweets = tweets.slice(bottomLimit, upperLimit);
+  const lastTweets = [...tweets].reverse().slice(bottomLimit, upperLimit);
 
   res.status(200).send(lastTweets);
 });
